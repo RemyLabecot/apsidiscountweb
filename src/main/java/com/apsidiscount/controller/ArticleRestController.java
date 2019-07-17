@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.apsidiscount.dao.ArticleDAO;
 import com.apsidiscount.entity.Article;
 import com.apsidiscount.exceptions.ArticleInconnuException;
 import com.apsidiscount.service.ArticleService;
@@ -28,8 +27,7 @@ public class ArticleRestController {
 	
 	@Autowired
 	private ArticleService articleService;
-	@Autowired
-	private ArticleDAO articleDao;
+
 	
 	@ExceptionHandler(ArticleInconnuException.class)
 	@ResponseStatus(code = HttpStatus.NOT_FOUND)
@@ -48,14 +46,14 @@ public class ArticleRestController {
 	
 	@PostMapping(consumes="application/json", produces="application/json", path="/api/article")
 	public ResponseEntity<Article> create(@RequestBody Article article, UriComponentsBuilder uriBuilder) throws URISyntaxException {
-		Article article1 = articleDao.create(article);
+		Article article1 = articleService.create(article);
 		URI location = uriBuilder.path("/api/article/{id}").buildAndExpand(article.getId()).toUri();
 		return ResponseEntity.created(location).body(article1);
 	}
 	
 	@GetMapping(produces="application/json", path="/api/articles")
 	public ResponseEntity<List<Article>> getAllArticles() {
-		List<Article> articles = articleDao.getArticles();
+		List<Article> articles = articleService.getArticles();
 		return ResponseEntity.ok().body(articles);
 	}
 }
