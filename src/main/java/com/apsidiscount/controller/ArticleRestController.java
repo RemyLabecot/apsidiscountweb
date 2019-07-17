@@ -2,10 +2,12 @@ package com.apsidiscount.controller;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,6 +22,7 @@ import com.apsidiscount.entity.Article;
 import com.apsidiscount.exceptions.ArticleInconnuException;
 import com.apsidiscount.service.ArticleService;
 
+@CrossOrigin
 @RestController
 public class ArticleRestController {
 	
@@ -48,5 +51,11 @@ public class ArticleRestController {
 		Article article1 = articleDao.create(article);
 		URI location = uriBuilder.path("/api/article/{id}").buildAndExpand(article.getId()).toUri();
 		return ResponseEntity.created(location).body(article1);
+	}
+	
+	@GetMapping(produces="application/json", path="/api/articles")
+	public ResponseEntity<List<Article>> getAllArticles() {
+		List<Article> articles = articleDao.getArticles();
+		return ResponseEntity.ok().body(articles);
 	}
 }
