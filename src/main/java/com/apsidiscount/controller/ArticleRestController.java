@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -51,9 +52,20 @@ public class ArticleRestController {
 		return ResponseEntity.created(location).body(article1);
 	}
 	
-	@GetMapping(produces="application/json", path="/api/articles")
+	@GetMapping(produces="application/json", path="/api/allArticles")
 	public ResponseEntity<List<Article>> getAllArticles() {
 		List<Article> articles = articleService.getArticles();
 		return ResponseEntity.ok().body(articles);
+	}
+	
+	@DeleteMapping(path="/api/article/{id}")
+	public void deleteArticle(@PathVariable long id) {
+		articleService.delete(id);
+	}
+	
+	@GetMapping(produces="application/json", path="/api/articles")
+	public ResponseEntity<List<Article>> getArticlesWithSort() {
+		List<Article> articles1 = articleService.getArticlesWithSort();
+		return ResponseEntity.ok().body(articles1);
 	}
 }
