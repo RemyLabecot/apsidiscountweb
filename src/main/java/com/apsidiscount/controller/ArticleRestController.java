@@ -24,6 +24,7 @@ import com.apsidiscount.entity.Client;
 import com.apsidiscount.entity.Panier;
 import com.apsidiscount.exceptions.ArticleInconnuException;
 import com.apsidiscount.exceptions.ClientInconnuException;
+import com.apsidiscount.exceptions.LoginAndPasswordException;
 import com.apsidiscount.exceptions.StockInsuffisantException;
 import com.apsidiscount.service.ArticleService;
 import com.apsidiscount.service.ClientService;
@@ -40,6 +41,14 @@ public class ArticleRestController {
 	@ExceptionHandler(ArticleInconnuException.class)
 	@ResponseStatus(code = HttpStatus.NOT_FOUND)
 	public ErrorResponse handleArticleInconnuException(ArticleInconnuException e) {
+		ErrorResponse errorResponse = new ErrorResponse();
+		errorResponse.setMessage(e.getMessage());
+		return errorResponse;
+	}
+	
+	@ExceptionHandler(LoginAndPasswordException.class)
+	@ResponseStatus(code = HttpStatus.UNAUTHORIZED)
+	public ErrorResponse handleLoginAndPasswordException(LoginAndPasswordException e) {
 		ErrorResponse errorResponse = new ErrorResponse();
 		errorResponse.setMessage(e.getMessage());
 		return errorResponse;
@@ -80,5 +89,13 @@ public class ArticleRestController {
 	public ResponseEntity<List<Article>> getArticlesWithSortRCP() {
 		List<Article> rcp = articleService.getArticlesWithSortRCP();
 		return ResponseEntity.ok().body(rcp);
+	}
+	
+	@PostMapping(consumes="application/json", produces="application/json", path="/api/client")
+	public Client getClientByLoginAndPassword(@RequestBody ClientDto jsonLogin) throws LoginAndPasswordException {
+		String email = jsonLogin.getEmail();
+		String password = jsonLogin.getPassword();
+		Client client = clientService.getClientByNameAndPassword(email, password);
+		return client;
 	}
 }
