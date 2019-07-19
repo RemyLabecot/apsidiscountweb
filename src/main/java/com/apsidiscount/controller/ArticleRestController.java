@@ -14,13 +14,19 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.apsidiscount.entity.Article;
+import com.apsidiscount.entity.Client;
+import com.apsidiscount.entity.Panier;
 import com.apsidiscount.exceptions.ArticleInconnuException;
+import com.apsidiscount.exceptions.ClientInconnuException;
+import com.apsidiscount.exceptions.StockInsuffisantException;
 import com.apsidiscount.service.ArticleService;
+import com.apsidiscount.service.ClientService;
 
 @CrossOrigin
 @RestController
@@ -28,7 +34,8 @@ public class ArticleRestController {
 	
 	@Autowired
 	private ArticleService articleService;
-
+	@Autowired
+	private ClientService clientService;
 	
 	@ExceptionHandler(ArticleInconnuException.class)
 	@ResponseStatus(code = HttpStatus.NOT_FOUND)
