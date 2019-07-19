@@ -75,4 +75,10 @@ public class ArticleRestController {
 		List<Article> articles1 = articleService.getArticlesWithSort();
 		return ResponseEntity.ok().body(articles1);
 	}
+	
+	@GetMapping(produces="application/json", path="/api/allproducts")
+	public ResponseEntity<List<Article>> getArticlesWithSortRCP() {
+		List<Article> rcp = articleService.getArticlesWithSortRCP();
+		return ResponseEntity.ok().body(rcp);
+	}
 }
