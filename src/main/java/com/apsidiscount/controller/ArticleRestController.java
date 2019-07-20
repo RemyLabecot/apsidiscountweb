@@ -111,4 +111,10 @@ public class ArticleRestController {
 		List<Article> articles = clientService.getArticlesByIdClient(id);
 		return articles;
 	}
+	
+	@DeleteMapping(path="/api/panier/client/{idClient}/article/{idArticle}")
+	public void deleteArticleFromPanier(@PathVariable long idClient, @PathVariable long idArticle) throws ClientInconnuException, ArticleInconnuException {
+		
+		clientService.deleteArticleFromPanier(idClient, idArticle);
+	}
 }
