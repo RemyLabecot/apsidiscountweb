@@ -14,14 +14,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+
 import com.apsidiscount.entity.Article;
 import com.apsidiscount.entity.Client;
-import com.apsidiscount.entity.Panier;
 import com.apsidiscount.exceptions.ArticleInconnuException;
 import com.apsidiscount.exceptions.ClientInconnuException;
 import com.apsidiscount.exceptions.LoginAndPasswordException;
@@ -97,5 +96,19 @@ public class ArticleRestController {
 		String password = jsonLogin.getPassword();
 		Client client = clientService.getClientByNameAndPassword(email, password);
 		return client;
+	}
+	
+	@PostMapping(produces="application/json", path="/api/panier")
+	public Article addArticlesInPanier(@RequestBody Prout jsonIds) throws ClientInconnuException, ArticleInconnuException, StockInsuffisantException {
+		long idClient = jsonIds.getIdClient();
+		long idArticle = jsonIds.getIdArticle();
+		Article article = clientService.ajouterArticleDansPanier(idClient, idArticle);
+		return article;
+	}
+	
+	@GetMapping(produces="application/json", path="/api/articles/{id}")
+	public List<Article> getArticlesByIdClient(@PathVariable long id) {
+		List<Article> articles = clientService.getArticlesByIdClient(id);
+		return articles;
 	}
 }
