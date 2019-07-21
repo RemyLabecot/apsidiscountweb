@@ -20,12 +20,14 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 
 import com.apsidiscount.entity.Article;
+import com.apsidiscount.entity.Categorie;
 import com.apsidiscount.entity.Client;
 import com.apsidiscount.exceptions.ArticleInconnuException;
 import com.apsidiscount.exceptions.ClientInconnuException;
 import com.apsidiscount.exceptions.LoginAndPasswordException;
 import com.apsidiscount.exceptions.StockInsuffisantException;
 import com.apsidiscount.service.ArticleService;
+import com.apsidiscount.service.CategorieService;
 import com.apsidiscount.service.ClientService;
 
 @CrossOrigin
@@ -36,6 +38,8 @@ public class ArticleRestController {
 	private ArticleService articleService;
 	@Autowired
 	private ClientService clientService;
+	@Autowired
+	private CategorieService categorieService;
 	
 	@ExceptionHandler(ArticleInconnuException.class)
 	@ResponseStatus(code = HttpStatus.NOT_FOUND)
@@ -116,5 +120,15 @@ public class ArticleRestController {
 	public void deleteArticleFromPanier(@PathVariable long idClient, @PathVariable long idArticle) throws ClientInconnuException, ArticleInconnuException {
 		
 		clientService.deleteArticleFromPanier(idClient, idArticle);
+	}
+	
+	@GetMapping(produces="application/json", path="/api/categories")
+	public List<Categorie> getCategories() {
+		return this.categorieService.getCategories();
+	}
+	
+	@GetMapping(produces="application/json", path="/api/categories/{nomCategorie}")
+	public List<Article> getArticlesByCategorie(@PathVariable String nomCategorie) {
+		return this.articleService.getArticlesByCategorie(nomCategorie);
 	}
 }
