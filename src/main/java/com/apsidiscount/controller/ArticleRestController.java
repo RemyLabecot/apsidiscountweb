@@ -127,8 +127,8 @@ public class ArticleRestController {
 		return this.categorieService.getCategories();
 	}
 	
-	@GetMapping(produces="application/json", path="/api/categories/{nomCategorie}")
-	public List<Article> getArticlesByCategorie(@PathVariable String nomCategorie) {
-		return this.articleService.getArticlesByCategorie(nomCategorie);
+	@GetMapping(produces="application/json", path="/api/categories/{idCategorie}")
+	public List<Article> getArticlesByCategorie(@PathVariable long idCategorie) {
+		return this.articleService.getArticlesByCategorie(idCategorie);
 	}
 }
