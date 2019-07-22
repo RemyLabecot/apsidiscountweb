@@ -18,16 +18,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-
 import com.apsidiscount.entity.Article;
-import com.apsidiscount.entity.Categorie;
-import com.apsidiscount.entity.Client;
 import com.apsidiscount.exceptions.ArticleInconnuException;
-import com.apsidiscount.exceptions.ClientInconnuException;
 import com.apsidiscount.exceptions.LoginAndPasswordException;
-import com.apsidiscount.exceptions.StockInsuffisantException;
 import com.apsidiscount.service.ArticleService;
-import com.apsidiscount.service.CategorieService;
 import com.apsidiscount.service.ClientService;
 
 @CrossOrigin
@@ -38,8 +32,6 @@ public class ArticleRestController {
 	private ArticleService articleService;
 	@Autowired
 	private ClientService clientService;
-	@Autowired
-	private CategorieService categorieService;
 	
 	@ExceptionHandler(ArticleInconnuException.class)
 	@ResponseStatus(code = HttpStatus.NOT_FOUND)
@@ -94,40 +86,13 @@ public class ArticleRestController {
 		return ResponseEntity.ok().body(rcp);
 	}
 	
-	@PostMapping(consumes="application/json", produces="application/json", path="/api/client")
-	public Client getClientByLoginAndPassword(@RequestBody ClientDto jsonLogin) throws LoginAndPasswordException {
-		String email = jsonLogin.getEmail();
-		String password = jsonLogin.getPassword();
-		Client client = clientService.getClientByNameAndPassword(email, password);
-		return client;
-	}
-	
-	@PostMapping(produces="application/json", path="/api/panier")
-	public Article addArticlesInPanier(@RequestBody Prout jsonIds) throws ClientInconnuException, ArticleInconnuException, StockInsuffisantException {
-		long idClient = jsonIds.getIdClient();
-		long idArticle = jsonIds.getIdArticle();
-		Article article = clientService.ajouterArticleDansPanier(idClient, idArticle);
-		return article;
-	}
-	
 	@GetMapping(produces="application/json", path="/api/articles/{id}")
 	public List<Article> getArticlesByIdClient(@PathVariable long id) {
 		List<Article> articles = clientService.getArticlesByIdClient(id);
 		return articles;
 	}
 	
-	@DeleteMapping(path="/api/panier/client/{idClient}/article/{idArticle}")
-	public void deleteArticleFromPanier(@PathVariable long idClient, @PathVariable long idArticle) throws ClientInconnuException, ArticleInconnuException {
-		
-		clientService.deleteArticleFromPanier(idClient, idArticle);
-	}
-	
-	@GetMapping(produces="application/json", path="/api/categories")
-	public List<Categorie> getCategories() {
-		return this.categorieService.getCategories();
-	}
-	
-	@GetMapping(produces="application/json", path="/api/categories/{idCategorie}")
+	@GetMapping(produces="application/json", path="/api/articlesByCategorie/{idCategorie}")
 	public List<Article> getArticlesByCategorie(@PathVariable long idCategorie) {
 		return this.articleService.getArticlesByCategorie(idCategorie);
 	}
