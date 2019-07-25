@@ -20,7 +20,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.apsidiscount.entity.Article;
 import com.apsidiscount.exceptions.ArticleInconnuException;
-import com.apsidiscount.exceptions.LoginAndPasswordException;
 import com.apsidiscount.service.ArticleService;
 import com.apsidiscount.service.ClientService;
 
@@ -41,13 +40,6 @@ public class ArticleRestController {
 		return errorResponse;
 	}
 	
-	@ExceptionHandler(LoginAndPasswordException.class)
-	@ResponseStatus(code = HttpStatus.UNAUTHORIZED)
-	public ErrorResponse handleLoginAndPasswordException(LoginAndPasswordException e) {
-		ErrorResponse errorResponse = new ErrorResponse();
-		errorResponse.setMessage(e.getMessage());
-		return errorResponse;
-	}
 
 	@GetMapping(produces="application/json", path="/api/article/{id}")
 	public ResponseEntity<Article> getById(@PathVariable long id) throws ArticleInconnuException {
